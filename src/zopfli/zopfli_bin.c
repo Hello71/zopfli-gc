@@ -29,9 +29,9 @@ decompressor.
 #include <stdlib.h>
 #include <string.h>
 
-#include "deflate.h"
-#include "gzip_container.h"
-#include "zlib_container.h"
+#include "../libzopfli/deflate.h"
+#include "../libzopfli/gzip_container.h"
+#include "../libzopfli/zlib_container.h"
 
 /*
 Loads a file into a memory array.
