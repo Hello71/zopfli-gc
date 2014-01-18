@@ -39,6 +39,23 @@ $(LIBZOPFLI): $(LIBZOPFLI_OBJ)
 $(LIBZOPFLI_OBJ): %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c -o $@ $<
 
+# Zopfli binary
+zopfli: $(ZOPFLIBIN_OBJ) libzopfli.so
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(ZOPFLIBIN_OBJ) -L. -lzopfli
+
+
+# ZopfliPNG binary
+zopflipng: $(ZOPFLIPNG_OBJ) $(LODEPNG_OBJ) libzopfli.so
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(ZOPFLIPNG_OBJ) $(LODEPNG_OBJ) -L. -lzopfli
+
+TEST_FILES := Makefile README README.zopflipng src/zopfli/zopfli_bin.c zopfli zopflipng libzopfli.so
+test: $(TEST_FILES) zopfli zopflipng
+	for file in $(TEST_FILES); do \
+		LD_LIBRARY_PATH=. ./zopfli -c -v -- "$$file" | gzip -d | cmp - "$$file" || exit 1; \
+	done
+	@echo "Test succeeded."
+
+# Remove all libraries and binaries
 clean:
 	$(RM) $(LIBZOPFLI_OBJ) $(ZOPFLIBIN_OBJ) $(LODEPNG_OBJ) $(ZOPFLIPNG_OBJ) $(TARGETS)
 
