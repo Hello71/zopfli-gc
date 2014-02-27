@@ -1,0 +1,4 @@
+language: c
+notifications:
+  irc:
+    - "irc.freenode.net#zopfli"
